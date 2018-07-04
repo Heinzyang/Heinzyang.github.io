@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT" />
+  <meta name="keywords" content="Hadoop Kerberos," />
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证 说明###环境服务器环境Centos7 服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8 ##开始配置 Kerberos设置概述常规hadoop集群存在的问题 Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDFS">
+<meta name="description" content="Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证 说明环境服务器环境Centos7(6下也兼容） 服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8 开始配置Kerberos设置概述常规hadoop集群存在的问题 Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDF">
+<meta name="keywords" content="Hadoop Kerberos">
 <meta property="og:type" content="article">
-<meta property="og:title" content="HaiYang Ma&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/2018/06/29/Hadoop with Kerberos/index.html">
+<meta property="og:title" content="Apache Hadoop整合Kerberos">
+<meta property="og:url" content="http://yoursite.com/2018/07/04/Hadoop-with-Kerberos/index.html">
 <meta property="og:site_name" content="HaiYang Ma&#39;s Blog">
-<meta property="og:description" content="Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证 说明###环境服务器环境Centos7 服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8 ##开始配置 Kerberos设置概述常规hadoop集群存在的问题 Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDFS">
+<meta property="og:description" content="Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证 说明环境服务器环境Centos7(6下也兼容） 服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8 开始配置Kerberos设置概述常规hadoop集群存在的问题 Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDF">
 <meta property="og:locale" content="default">
-<meta property="og:updated_time" content="2018-07-04T09:01:31.508Z">
+<meta property="og:updated_time" content="2018-07-04T09:05:51.005Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HaiYang Ma&#39;s Blog">
-<meta name="twitter:description" content="Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证 说明###环境服务器环境Centos7 服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8 ##开始配置 Kerberos设置概述常规hadoop集群存在的问题 Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDFS">
+<meta name="twitter:title" content="Apache Hadoop整合Kerberos">
+<meta name="twitter:description" content="Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证 说明环境服务器环境Centos7(6下也兼容） 服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8 开始配置Kerberos设置概述常规hadoop集群存在的问题 Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDF">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/06/29/Hadoop with Kerberos/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/04/Hadoop-with-Kerberos/"/>
 
 
 
 
 
-  <title> | HaiYang Ma's Blog</title>
+  <title>Apache Hadoop整合Kerberos | HaiYang Ma's Blog</title>
   
 
 
@@ -232,7 +233,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/29/Hadoop with Kerberos/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Hadoop-with-Kerberos/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="mhyang">
@@ -249,7 +250,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline"></h1>
+          <h1 class="post-title" itemprop="name headline">Apache Hadoop整合Kerberos</h1>
         
 
         <div class="post-meta">
@@ -261,8 +262,8 @@
               
                 <span class="post-meta-item-text">Posted on</span>
               
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-29T22:49:43+08:00">
-                2018-06-29
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-04T17:04:35+08:00">
+                2018-07-04
               </time>
             
 
@@ -301,10 +302,9 @@
       
         <hr>
 <h2 id="Apache-Hadoop整合Kerberos"><a href="#Apache-Hadoop整合Kerberos" class="headerlink" title="Apache Hadoop整合Kerberos"></a>Apache Hadoop整合Kerberos</h2><p>Apache原版Hadoop集群整合Kerberos安全验证</p>
-<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>###环境<br>服务器环境Centos7</p>
+<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><h3 id="环境"><a href="#环境" class="headerlink" title="环境"></a>环境</h3><p>服务器环境Centos7(6下也兼容）</p>
 <p>服务器如下：<br>hadoop001 主节点<br>hadoop002 从节点<br>hadoop版本2.6.5<br>jdk版本1.8</p>
-<p>##开始配置</p>
-<h3 id="Kerberos设置"><a href="#Kerberos设置" class="headerlink" title="Kerberos设置"></a>Kerberos设置</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><h5 id="常规hadoop集群存在的问题"><a href="#常规hadoop集群存在的问题" class="headerlink" title="常规hadoop集群存在的问题"></a>常规hadoop集群存在的问题</h5><blockquote>
+<h2 id="开始配置"><a href="#开始配置" class="headerlink" title="开始配置"></a>开始配置</h2><h3 id="Kerberos设置"><a href="#Kerberos设置" class="headerlink" title="Kerberos设置"></a>Kerberos设置</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><h5 id="常规hadoop集群存在的问题"><a href="#常规hadoop集群存在的问题" class="headerlink" title="常规hadoop集群存在的问题"></a>常规hadoop集群存在的问题</h5><blockquote>
 <p>Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDFS或M/R进行交互时不需要验证，恶意用户可以伪装成真正的用户或者服务器入侵到hadoop集群上，导致：恶意的提交作业，修改JobTracker状态，篡改HDFS上的数据，伪装成NameNode 或者TaskTracker接受任务等。 尽管在版本之后， HDFS增加了文件和目录的权限，但并没有强认证的保障，这些权限只能对偶然的数据丢失起保护作用。恶意的用户可以轻易的伪装成其他用户来篡改权限，致使权限设置形同虚设。不能够对Hadoop集群起到安全保障。</p>
 </blockquote>
 <h5 id="kerberos解决的安全问题"><a href="#kerberos解决的安全问题" class="headerlink" title="kerberos解决的安全问题"></a>kerberos解决的安全问题</h5><blockquote>
@@ -403,6 +403,12 @@
 
     <footer class="post-footer">
       
+        <div class="post-tags">
+          
+            <a href="/tags/Hadoop-Kerberos/" rel="tag"># Hadoop Kerberos</a>
+          
+        </div>
+      
 
       
       
@@ -412,15 +418,15 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
+              <a href="/2018/06/29/Hadoop with Kerberos/" rel="next" title="">
+                <i class="fa fa-chevron-left"></i> 
+              </a>
+            
           </div>
 
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2018/07/04/Hadoop-with-Kerberos/" rel="prev" title="Apache Hadoop整合Kerberos">
-                Apache Hadoop整合Kerberos <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -543,7 +549,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Hadoop整合Kerberos"><span class="nav-number">1.</span> <span class="nav-text">Apache Hadoop整合Kerberos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number">2.</span> <span class="nav-text">说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kerberos设置"><span class="nav-number">2.1.</span> <span class="nav-text">Kerberos设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">2.1.1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#常规hadoop集群存在的问题"><span class="nav-number">2.1.1.1.</span> <span class="nav-text">常规hadoop集群存在的问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#kerberos解决的安全问题"><span class="nav-number">2.1.1.2.</span> <span class="nav-text">kerberos解决的安全问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop设置"><span class="nav-number">2.2.</span> <span class="nav-text">Hadoop设置</span></a></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#Apache-Hadoop整合Kerberos"><span class="nav-number">1.</span> <span class="nav-text">Apache Hadoop整合Kerberos</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#说明"><span class="nav-number">2.</span> <span class="nav-text">说明</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#环境"><span class="nav-number">2.1.</span> <span class="nav-text">环境</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#开始配置"><span class="nav-number">3.</span> <span class="nav-text">开始配置</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Kerberos设置"><span class="nav-number">3.1.</span> <span class="nav-text">Kerberos设置</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#概述"><span class="nav-number">3.1.1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#常规hadoop集群存在的问题"><span class="nav-number">3.1.1.1.</span> <span class="nav-text">常规hadoop集群存在的问题</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#kerberos解决的安全问题"><span class="nav-number">3.1.1.2.</span> <span class="nav-text">kerberos解决的安全问题</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Hadoop设置"><span class="nav-number">3.2.</span> <span class="nav-text">Hadoop设置</span></a></li></ol></li></ol></div>
             
 
           </div>

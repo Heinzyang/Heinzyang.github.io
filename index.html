@@ -229,6 +229,136 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Hadoop-with-Kerberos/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="mhyang">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="HaiYang Ma's Blog">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/07/04/Hadoop-with-Kerberos/" itemprop="url">Apache Hadoop整合Kerberos</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">Posted on</span>
+              
+              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-07-04T17:04:35+08:00">
+                2018-07-04
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          
+Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
+说明环境服务器环境Centos7(6下也兼容）
+服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8
+开始配置Kerberos设置概述常
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/07/04/Hadoop-with-Kerberos/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/29/Hadoop with Kerberos/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -300,224 +430,20 @@
       
         
           
-            <hr>
-<h2 id="Apache-Hadoop整合Kerberos"><a href="#Apache-Hadoop整合Kerberos" class="headerlink" title="Apache Hadoop整合Kerberos"></a>Apache Hadoop整合Kerberos</h2><p>Apache原版Hadoop集群整合Kerberos安全验证</p>
-<h2 id="说明"><a href="#说明" class="headerlink" title="说明"></a>说明</h2><p>###环境<br>服务器环境Centos7</p>
-<p>服务器如下：<br>hadoop001 主节点<br>hadoop002 从节点<br>hadoop版本2.6.5<br>jdk版本1.8</p>
-<h3 id="Kerberos设置"><a href="#Kerberos设置" class="headerlink" title="Kerberos设置"></a>Kerberos设置</h3><h4 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h4><h5 id="常规hadoop集群存在的问题"><a href="#常规hadoop集群存在的问题" class="headerlink" title="常规hadoop集群存在的问题"></a>常规hadoop集群存在的问题</h5><blockquote>
-<p>Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDFS或M/R进行交互时不需要验证，恶意用户可以伪装成真正的用户或者服务器入侵到hadoop集群上，导致：恶意的提交作业，修改JobTracker状态，篡改HDFS上的数据，伪装成NameNode 或者TaskTracker接受任务等。 尽管在版本之后， HDFS增加了文件和目录的权限，但并没有强认证的保障，这些权限只能对偶然的数据丢失起保护作用。恶意的用户可以轻易的伪装成其他用户来篡改权限，致使权限设置形同虚设。不能够对Hadoop集群起到安全保障。</p>
-</blockquote>
-<h5 id="kerberos解决的安全问题"><a href="#kerberos解决的安全问题" class="headerlink" title="kerberos解决的安全问题"></a>kerberos解决的安全问题</h5><blockquote>
-<p>加入Kerberos认证机制使得集群中的节点就是它们所宣称的，是信赖的。Kerberos可以将认证的密钥在集群部署时事先放到可靠的节点上。集群运行时，集群内的节点使用密钥得到认证。只有被认证过节点才能正常使用。企图冒充的节点由于没有事先得到的密钥信息，无法与集群内部的节点通信。kerberos实现的是机器级别的安全认证，也就是前面提到的服务到服务的认证问题。事先对集群中确定的机器由管理员手动添加到kerberos数据库中，在KDC上分别产生主机与各个节点的keytab(包含了host和对应节点的名字，还有他们之间的密钥)，并将这些keytab分发到对应的节点上。通过这些keytab文件，节点可以从KDC上获得与目标节点通信的密钥，进而被目标节点所认证，提供相应的服务，防止了被冒充的可能性。</p>
-</blockquote>
-<ol>
-<li>安装<br>kdc服务器安装内容如下：</li>
-</ol>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y krb5-server krb5-lib krb5-workstation</span><br></pre></td></tr></table></figure>
-<p>子节点安装内容如下：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">yum install -y krb5-lib krb5-workstation</span><br></pre></td></tr></table></figure></p>
-<ol start="2">
-<li>配置</li>
-</ol>
-<p>安装 Kerberos 软件之后，必须配置 KDC 服务器。配置一个主 KDC 服务器和至少一个从 KDC 服务器可以提供颁发凭证的服务。这些凭证是 Kerberos 服务的基础，因此在尝试其他任务之前必须安装 KDC。</p>
-<p>Kerberos的配置文件只有两个。在Hadoop001即用户选定的kdc服务器中创建以下两个文件（若存在该文件直接修改即可）,并同步/etc/krb5.conf到所有机器。</p>
-<ul>
-<li>/var/kerberos/krb5kdc/kdc.conf<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[kdcdefaults]</span><br><span class="line"> kdc_ports = 88</span><br><span class="line"> kdc_tcp_ports = 88</span><br><span class="line"></span><br><span class="line">[realms]</span><br><span class="line"> HADOOP.COM = &#123;</span><br><span class="line">  master_key_type = aes128-cts</span><br><span class="line">  acl_file = /var/kerberos/krb5kdc/kadm5.acl</span><br><span class="line">  dict_file = /usr/share/dict/words</span><br><span class="line">  admin_keytab = /var/kerberos/krb5kdc/kadm5.keytab</span><br><span class="line">  supported_enctypes = aes128-cts:normal des3-hmac-sha1:normal arcfour-hmac:normal camellia256-cts:normal camellia128-cts:normal des-hmac-sha1:normal des-cbc-md5:normal des-cbc-crc:normal</span><br><span class="line">   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<p>默认情况可以不用修改。其中EXAMPLE.COM可以随意配置，只需要在所有配置中统一即可，值得一提的是如果使用默认的ase256算法加密，那么就需要我们另行安装JCE<a href="&quot;http://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html&quot;">点击这里下载</a>，所以这里我们取消掉。</p>
-<p>*/etc/krb5.conf<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[logging]</span><br><span class="line"> default = FILE:/var/log/krb5libs.log</span><br><span class="line"> kdc = FILE:/var/log/krb5kdc.log</span><br><span class="line"> admin_server = FILE:/var/log/kadmind.log</span><br><span class="line"></span><br><span class="line">[libdefaults]</span><br><span class="line"> dns_lookup_realm = false</span><br><span class="line"> ticket_lifetime = 100d</span><br><span class="line"> renew_lifetime = 100d</span><br><span class="line"> forwardable = true</span><br><span class="line"> rdns = false</span><br><span class="line"> default_realm = HADOOP.COM</span><br><span class="line"># default_ccache_name = KEYRING:persistent:%&#123;uid&#125;</span><br><span class="line"></span><br><span class="line">[realms]</span><br><span class="line"> HADOOP.COM = &#123;</span><br><span class="line">  kdc = hadoop001:88</span><br><span class="line">  admin_server = hadoop001:749</span><br><span class="line"> &#125;</span><br><span class="line"></span><br><span class="line">[domain_realm]</span><br><span class="line"> .example.com = HADOOP.COM</span><br><span class="line"> example.com = HADOOP.COM</span><br></pre></td></tr></table></figure></p>
-<p>EXAMPLE.COM可以随意配置，只需要在所有配置中统一即可。default_ccache_name = KEYRING:persistent:%{uid}选项可以在用户缓存验证失败的时候注释掉。<br>realms下的kdc和admin_server只需要更改主机名，端口号不需要改变。</p>
-<ol start="3">
-<li>启动<br>完成上述工作之后，需要在主节点启动，第一次启动之前需要初始化创建数据库(如果不指定 -r，系统会自动选择你指定的唯一realm)<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kdb5_util create -r HADOOP.COM -s</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>如果遇到数据库已经存在的提示，可以把/var/kerberos/krb5kdc/目录下的principal的相关文件都删除掉。默认的数据库名字都是principal。可以使用-d指定数据库名字。</p>
-<ol start="4">
-<li>启动kerberos<br>centos6<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">service kadmin start</span><br><span class="line">service krb5kdc start</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>centos7<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">systemctl start kadmin.service</span><br><span class="line">systemctl start krb5kdc.service</span><br></pre></td></tr></table></figure></p>
-<ol start="5">
-<li>创建账户<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">kadmin:addprinc -randkey hadoop/hadoop001@HADOOP.COM</span><br><span class="line">kadmin:addprinc -randkey hadoop/hadoop002@HADOOP.COM</span><br><span class="line">kadmin:addprinc -randkey HTTP/hadoop001@HADOOP.COM</span><br><span class="line">kadmin:addprinc -randkey HTTP/hadoop002@HADOOP.COM</span><br><span class="line">kadmin:xst -k /xxx/hadoop001.keytab hadoop/hadoop001 HTTP/hadoop001</span><br><span class="line">kadmin:xst -k /xxx/hadoop002.keytab hadoop/hadoop002 HTTP/hadoop002</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>首先在数据库中加入用户和HTTP传输许可，随后将每个节点的所有信息打包成一个keytab文件放于指定位置</p>
-<blockquote>
-<p>在标准的情况中，依据不同服务的启动者的不同，会创建不同的账户，导出不同的keytab文件。由于我们使用的是hadoop用户启动所有服务的状况，所以一个hadoop.keytab就足够使用了。如果像ClouderaManager那样的一个用户启动一种服务，就要创建不同的用户，导出不同的keytab。例如:hadoop1的zookeeper配置文件中需要zookeeper.keytab，当中含有zookeeper/hadoop001这个账户,可以参考<a href="&quot;http://hadoop.apache.org/docs/r2.6.5/hadoop-project-dist/hadoop-common/SecureMode.html&quot;">hadoop官网配置教程</a></p>
-</blockquote>
-<h3 id="Hadoop设置"><a href="#Hadoop设置" class="headerlink" title="Hadoop设置"></a>Hadoop设置</h3><ol>
-<li>hadoop-env.sh<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br></pre></td><td class="code"><pre><span class="line"># Licensed to the Apache Software Foundation (ASF) under one</span><br><span class="line"># or more contributor license agreements.  See the NOTICE file</span><br><span class="line"># distributed with this work for additional information</span><br><span class="line"># regarding copyright ownership.  The ASF licenses this file</span><br><span class="line"># to you under the Apache License, Version 2.0 (the</span><br><span class="line"># "License"); you may not use this file except in compliance</span><br><span class="line"># with the License.  You may obtain a copy of the License at</span><br><span class="line">#</span><br><span class="line">#     http://www.apache.org/licenses/LICENSE-2.0</span><br><span class="line">#</span><br><span class="line"># Unless required by applicable law or agreed to in writing, software</span><br><span class="line"># distributed under the License is distributed on an "AS IS" BASIS,</span><br><span class="line"># WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.</span><br><span class="line"># See the License for the specific language governing permissions and</span><br><span class="line"># limitations under the License.</span><br><span class="line"></span><br><span class="line"># Set Hadoop-specific environment variables here.</span><br><span class="line"></span><br><span class="line"># The only required environment variable is JAVA_HOME.  All others are</span><br><span class="line"># optional.  When running a distributed configuration it is best to</span><br><span class="line"># set JAVA_HOME in this file, so that it is correctly defined on</span><br><span class="line"># remote nodes.</span><br><span class="line"></span><br><span class="line"># The java implementation to use.</span><br><span class="line">export JAVA_HOME=/usr/lib/jvm/java-1.8.0-openjdk-1.8.0.171-8.b10.el7_5.x86_64</span><br><span class="line"></span><br><span class="line"># The jsvc implementation to use. Jsvc is required to run secure datanodes</span><br><span class="line"># that bind to privileged ports to provide authentication of data transfer</span><br><span class="line"># protocol.  Jsvc is not required if SASL is configured for authentication of</span><br><span class="line"># data transfer protocol using non-privileged ports.</span><br><span class="line">export JSVC_HOME=/usr/bin</span><br><span class="line"></span><br><span class="line">export HADOOP_CONF_DIR=/home/hadoop/app/hadoop/etc/hadoop</span><br><span class="line"></span><br><span class="line"># Extra Java CLASSPATH elements.  Automatically insert capacity-scheduler.</span><br><span class="line">for f in $HADOOP_HOME/contrib/capacity-scheduler/*.jar; do</span><br><span class="line">  if [ "$HADOOP_CLASSPATH" ]; then</span><br><span class="line">    export HADOOP_CLASSPATH=$HADOOP_CLASSPATH:$f</span><br><span class="line">  else</span><br><span class="line">    export HADOOP_CLASSPATH=$f</span><br><span class="line">  fi</span><br><span class="line">done</span><br><span class="line"></span><br><span class="line"># The maximum amount of heap to use, in MB. Default is 1000.</span><br><span class="line">#export HADOOP_HEAPSIZE=</span><br><span class="line">#export HADOOP_NAMENODE_INIT_HEAPSIZE=""</span><br><span class="line"></span><br><span class="line"># Extra Java runtime options.  Empty by default.</span><br><span class="line">export HADOOP_OPTS="$HADOOP_OPTS -Djava.net.preferIPv4Stack=true"</span><br><span class="line"></span><br><span class="line"># Command specific options appended to HADOOP_OPTS when specified</span><br><span class="line">export HADOOP_NAMENODE_OPTS="-Dhadoop.security.logger=$&#123;HADOOP_SECURITY_LOGGER:-INFO,RFAS&#125; -Dhdfs.audit.logger=$&#123;HDFS_AUDIT_LOGGER:-INFO,NullAppender&#125; $HADOOP_NAMENODE_OPTS"</span><br><span class="line">export HADOOP_DATANODE_OPTS="-Dhadoop.security.logger=ERROR,RFAS $HADOOP_DATANODE_OPTS"</span><br><span class="line"></span><br><span class="line">export HADOOP_SECONDARYNAMENODE_OPTS="-Dhadoop.security.logger=$&#123;HADOOP_SECURITY_LOGGER:-INFO,RFAS&#125; -Dhdfs.audit.logger=$&#123;HDFS_AUDIT_LOGGER:-INFO,NullAppender&#125; $HADOOP_SECONDARYNAMENODE_OPTS"</span><br><span class="line"></span><br><span class="line">export HADOOP_NFS3_OPTS="$HADOOP_NFS3_OPTS"</span><br><span class="line">export HADOOP_PORTMAP_OPTS="-Xmx512m $HADOOP_PORTMAP_OPTS"</span><br><span class="line"></span><br><span class="line"># The following applies to multiple commands (fs, dfs, fsck, distcp etc)</span><br><span class="line">export HADOOP_CLIENT_OPTS="-Xmx512m $HADOOP_CLIENT_OPTS"</span><br><span class="line">#HADOOP_JAVA_PLATFORM_OPTS="-XX:-UsePerfData $HADOOP_JAVA_PLATFORM_OPTS"</span><br><span class="line"></span><br><span class="line"># On secure datanodes, user to run the datanode as after dropping privileges.</span><br><span class="line"># This **MUST** be uncommented to enable secure HDFS if using privileged ports</span><br><span class="line"># to provide authentication of data transfer protocol.  This **MUST NOT** be</span><br><span class="line"># defined if SASL is configured for authentication of data transfer protocol</span><br><span class="line"># using non-privileged ports.</span><br><span class="line">export HADOOP_SECURE_DN_USER=hadoop</span><br><span class="line"></span><br><span class="line"># Where log files are stored.  $HADOOP_HOME/logs by default.</span><br><span class="line">#export HADOOP_LOG_DIR=$&#123;HADOOP_LOG_DIR&#125;/$USER</span><br><span class="line"></span><br><span class="line"># Where log files are stored in the secure data environment.</span><br><span class="line">export HADOOP_SECURE_DN_LOG_DIR=/home/hadoop/app/hadoop/logs</span><br><span class="line"></span><br><span class="line">###</span><br><span class="line"># HDFS Mover specific parameters</span><br><span class="line">###</span><br><span class="line"># Specify the JVM options to be used when starting the HDFS Mover.</span><br><span class="line"># These options will be appended to the options specified as HADOOP_OPTS</span><br><span class="line"># and therefore may override any similar flags set in HADOOP_OPTS</span><br><span class="line">#</span><br><span class="line"># export HADOOP_MOVER_OPTS=""</span><br><span class="line"></span><br><span class="line">###</span><br><span class="line"># Advanced Users Only!</span><br><span class="line">###</span><br><span class="line"></span><br><span class="line"># The directory where pid files are stored. /tmp by default.</span><br><span class="line"># NOTE: this should be set to a directory that can only be written to by </span><br><span class="line">#       the user that will run the hadoop daemons.  Otherwise there is the</span><br><span class="line">#       potential for a symlink attack.</span><br><span class="line">export HADOOP_PID_DIR=$&#123;HADOOP_PID_DIR&#125;</span><br><span class="line">export HADOOP_SECURE_DN_PID_DIR=/home/hadoop/app/hadoop/pids</span><br><span class="line"></span><br><span class="line"># A string representing this instance of hadoop. $USER by default.</span><br><span class="line">export HADOOP_IDENT_STRING=$USER</span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>该文件中需要配置JSVC，启动DataNode时候需要使用。</p>
-<ol start="2">
-<li><p>修改core-site.xml,新增如下</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.security.authorization<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">name</span>&gt;</span>hadoop.security.authentication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">value</span>&gt;</span>kerberos<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>修改hdfs-site.xml,新增如下</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">configuration</span>&gt;</span></span><br><span class="line"><span class="comment">&lt;!-- common --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.replication<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>1<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.name.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/home/hadoop/app/hadoop/tmp/dfs/name<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>file:/home/hadoop/app/hadoop/tmp/dfs/data<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- NameNode --&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.block.access.token.enable<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.https.enable<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>true<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.keytab.file<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop002.keytab<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.kerberos.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.kerberos.internal.spnego.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>HTTP/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"> <span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"> <span class="comment">&lt;!-- Secondary NameNode --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.namenode.secondary.http-address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop001:50090<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.secondary.namenode.keytab.file<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop002.keytab<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.secondary.namenode.kerberos.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.secondary.namenode.kerberos.internal.spnego.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>HTTP/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- DataNode --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.data.dir.perm<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>700<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>0.0.0.0:1004<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.http.address<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>0.0.0.0:1006<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.keytab.file<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop002.keytab<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.kerberos.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"> </span><br><span class="line"><span class="comment">&lt;!-- WebHDFS --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.web.authentication.kerberos.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>HTTP/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>dfs.datanode.kerberos.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop002.keytab<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">configuration</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>配置yarn-site.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">&lt;!-- ResourceManager --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.keytab<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop002.keytab<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.resourcemanager.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>hadooop/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!-- NodeManager --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.keytab<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop002.keytab<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>hadooop/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.container-executor.class	<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>org.apache.hadoop.yarn.server.nodemanager.LinuxContainerExecutor<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>yarn.nodemanager.linux-container-executor.group<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>hadoop<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>Mapred-site.xml</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.keytab<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>/home/hadoop/hadoop001.keytab<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">property</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">name</span>&gt;</span>mapreduce.jobhistory.principal<span class="tag">&lt;/<span class="name">name</span>&gt;</span></span><br><span class="line">	<span class="tag">&lt;<span class="name">value</span>&gt;</span>hadooop/_HOST@HADOOP.COM<span class="tag">&lt;/<span class="name">value</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">property</span>&gt;</span></span><br></pre></td></tr></table></figure>
-</li>
-</ol>
-<p>启动NameNode<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./start-dfs.sh</span><br></pre></td></tr></table></figure></p>
-<p>启动DataNode<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./start-secure-dns.sh</span><br></pre></td></tr></table></figure></p>
-<blockquote>
-<p>修改container-executor.conf.dir，重新编译container-executor：<br> <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> cp ~/hadoop-src/hadoop-yarn-project</span><br><span class="line"> mvn package -Pdist,native -DskipTests -Dtar -Dcontainer-executor.conf.dir=/etc</span><br><span class="line"> cp ./hadoop-yarn-project/target/hadoop-yarn-project-2.0.0-cdh4.2.1/bin/container-executor ~/hadoop/bin</span><br><span class="line"><span class="meta"> #</span>以下命令查看编译是否成功</span><br><span class="line">strings ~/hadoop/bin/container-executor|grep etc</span><br><span class="line"><span class="meta"> #</span>修改权限</span><br><span class="line"> sudo chown root:hadoop  /xx/hadoop/bin/container-executor</span><br><span class="line"> sudo chmod 4750 /xx/hadoop/bin/container-executor</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<blockquote>
-<p>说明：为什么要编译container-executor?</p>
-</blockquote>
-<blockquote>
-<p>答：因为container-executor要求container-executor.cfg这个文件及其所有父目录都属于root用户，且权限小于755。配置文件container-executor.cfg默认的路径在../etc/hadoop/container-executor.cfg。如果，按照默认的路径修改所有父目录都属于root，显然不现实。于是，把路径编译到/etc/container-executor.cfg中。</p>
-</blockquote>
-<blockquote>
-<p>创建/etc/container-executor.cfg文件,文件内容如下：<br><figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#运行container的用户</span><br><span class="line">yarn.nodemanager.linux-container-executor.group=hadoop</span><br><span class="line">#这个是允许运行应用的用户列表，默认是全部可以运行</span><br><span class="line">banned.users=bin</span><br><span class="line">#这个是允许提交job的最小的userid的值。centos中一般用户的id在500以上。</span><br><span class="line">min.user.id=500</span><br></pre></td></tr></table></figure></p>
-</blockquote>
-<p>修改/etc/container-executor.cfg的权限<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sudo chown root:root /etc/container-executor.cfg</span><br><span class="line">sudo chmod 600 /etc/container-executor.cfg</span><br></pre></td></tr></table></figure></p>
-<p>启动Yarn<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./start-yarn.sh</span><br></pre></td></tr></table></figure></p>
-<p>切记，HDFS和YARN启动过程中，不会在命令行报错，需要jps观察是否服务启动成功，并且去logs目录下观察日志。</p>
-<p>###常见错误</p>
-<p>gcc<br>error: C++ preprocessor “/lib/cpp” fails sanity check 问题的解决</p>
-<pre><code>问题的根源是缺少必要的C++库。如果是CentOS系统，运行，如下命令解决：
-
-  yum install glibc-headers
-
-  yum install gcc-c++ 
-</code></pre>
           
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/06/28/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhyang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HaiYang Ma's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/06/28/hello-world/" itemprop="url">Hello World</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">Posted on</span>
-              
-              <time title="Post created" itemprop="dateCreated datePublished" datetime="2018-06-28T12:05:38+08:00">
-                2018-06-28
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-            <p>Welcome to <a href="https://hexo.io/" target="_blank" rel="noopener">Hexo</a>! This is your very first post. Check <a href="https://hexo.io/docs/" target="_blank" rel="noopener">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a href="https://hexo.io/docs/troubleshooting.html" target="_blank" rel="noopener">troubleshooting</a> or you can ask me on <a href="https://github.com/hexojs/hexo/issues" target="_blank" rel="noopener">GitHub</a>.</p>
-<h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">"My New Post"</span></span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/writing.html" target="_blank" rel="noopener">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/server.html" target="_blank" rel="noopener">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/generating.html" target="_blank" rel="noopener">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-<p>More info: <a href="https://hexo.io/docs/deployment.html" target="_blank" rel="noopener">Deployment</a></p>
-
-          
+Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
+说明###环境服务器环境Centos7
+服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8
+##开始配置
+Kerberos设置概述常规
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/06/29/Hadoop with Kerberos/#more" rel="contents">
+              Read more &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
         
       
     </div>
@@ -605,6 +531,15 @@
 
             
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                
+                  <span class="site-state-item-count">1</span>
+                  <span class="site-state-item-name">tags</span>
+                
+              </div>
             
 
           </nav>
