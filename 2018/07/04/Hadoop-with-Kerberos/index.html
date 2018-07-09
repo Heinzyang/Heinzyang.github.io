@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="HaiYang Ma&#39;s Blog">
 <meta property="og:description" content="Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证 说明环境服务器环境Centos7(6下也兼容） 服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8 开始配置Kerberos设置概述常规hadoop集群存在的问题 Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDF">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-06T08:15:20.807Z">
+<meta property="og:updated_time" content="2018-07-09T06:47:55.010Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Apache Hadoop整合Kerberos">
 <meta name="twitter:description" content="Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证 说明环境服务器环境Centos7(6下也兼容） 服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8 开始配置Kerberos设置概述常规hadoop集群存在的问题 Hadoop设计之初，默认集群内所有的节点都是可靠的。由于用户与HDF">
@@ -380,7 +380,8 @@
 <p>启动Yarn<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./start-yarn.sh</span><br></pre></td></tr></table></figure></p>
 <p>切记，HDFS和YARN启动过程中，不会在命令行报错，需要jps观察是否服务启动成功，并且去logs目录下观察日志。</p>
 <p>###常见错误</p>
-<p>gcc<br>error: C++ preprocessor “/lib/cpp” fails sanity check 问题的解决</p>
+<p>编译过程中需要安装cmake gcc ant maven protoc-2.5.0 如果使用java8进行编译则需要跳过javadoc生成</p>
+<p>error: C++ preprocessor “/lib/cpp” fails sanity check 问题的解决</p>
 <pre><code>问题的根源是缺少必要的C++库。如果是CentOS系统，运行，如下命令解决：
 
   yum install glibc-headers
