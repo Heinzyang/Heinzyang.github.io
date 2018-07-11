@@ -79,13 +79,22 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="HaiYang Ma&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="AutoWeka 使用教程概述 在WEKA中有许多即选即用的机器学习算法，然而，这些算法及它们各自的参数都会显著地影响最后的结果，各种不同算法与参数的组合数量也多到让人难以选择的地步。Auto-WEKA则是同时选择学习算法和它们参数，让使用者不必一再尝试。Auto-WEKA借用贝氏最佳化（Bayesian optimization）的创新做法，实现了完全自动化的方案。我们希望Auto-WEKA可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="AutoWeka Tutorial">
+<meta property="og:url" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/index.html">
 <meta property="og:site_name" content="HaiYang Ma&#39;s Blog">
+<meta property="og:description" content="AutoWeka 使用教程概述 在WEKA中有许多即选即用的机器学习算法，然而，这些算法及它们各自的参数都会显著地影响最后的结果，各种不同算法与参数的组合数量也多到让人难以选择的地步。Auto-WEKA则是同时选择学习算法和它们参数，让使用者不必一再尝试。Auto-WEKA借用贝氏最佳化（Bayesian optimization）的创新做法，实现了完全自动化的方案。我们希望Auto-WEKA可以">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/java1.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/java2.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/java3.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/weka1.png">
+<meta property="og:updated_time" content="2018-07-11T07:58:48.547Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HaiYang Ma&#39;s Blog">
+<meta name="twitter:title" content="AutoWeka Tutorial">
+<meta name="twitter:description" content="AutoWeka 使用教程概述 在WEKA中有许多即选即用的机器学习算法，然而，这些算法及它们各自的参数都会显著地影响最后的结果，各种不同算法与参数的组合数量也多到让人难以选择的地步。Auto-WEKA则是同时选择学习算法和它们参数，让使用者不必一再尝试。Auto-WEKA借用贝氏最佳化（Bayesian optimization）的创新做法，实现了完全自动化的方案。我们希望Auto-WEKA可以">
+<meta name="twitter:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/java1.png">
 
 
 
@@ -115,13 +124,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/"/>
 
 
 
 
 
-  <title>HaiYang Ma's Blog</title>
+  <title>AutoWeka Tutorial | HaiYang Ma's Blog</title>
   
 
 
@@ -140,8 +149,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -224,9 +232,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -256,9 +264,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/11/AutoWeka-Tutorial/" itemprop="url">AutoWeka Tutorial</a></h1>
+          <h1 class="post-title" itemprop="name headline">AutoWeka Tutorial</h1>
         
 
         <div class="post-meta">
@@ -308,19 +314,19 @@
       
 
       
-        
-          
-          AutoWeka 使用教程概述
-在WEKA中有许多即选即用的机器学习算法，然而，这些算法及它们各自的参数都会显著地影响最后的结果，各种不同算法与参数的组合数量也多到让人难以选择的地步。Auto-WEKA则是同时选择学习算法和它们参数，让使用者不必一再尝试。Auto-WEKA借用贝氏最佳化（Bayes
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/11/AutoWeka-Tutorial/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <h1 id="AutoWeka-使用教程"><a href="#AutoWeka-使用教程" class="headerlink" title="AutoWeka 使用教程"></a>AutoWeka 使用教程</h1><h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><blockquote>
+<p>在WEKA中有许多即选即用的机器学习算法，然而，这些算法及它们各自的参数都会显著地影响最后的结果，<br>各种不同算法与参数的组合数量也多到让人难以选择的地步。Auto-WEKA则是同时选择学习算法和它们参数，<br>让使用者不必一再尝试。Auto-WEKA借用贝氏最佳化（Bayesian optimization）的创新做法，<br>实现了完全自动化的方案。<br>我们希望Auto-WEKA可以帮助非专业使用者更有效率地找到适合他们数据的机器学习算法和其参数，<br>并且最终提升机器学习的效果。 —AutoWeka官网</p>
+</blockquote>
+<h2 id="AutoWeka前置环境"><a href="#AutoWeka前置环境" class="headerlink" title="AutoWeka前置环境"></a>AutoWeka前置环境</h2><h3 id="使用图形界面的前置环境"><a href="#使用图形界面的前置环境" class="headerlink" title="使用图形界面的前置环境"></a>使用图形界面的前置环境</h3><p>1.安装Java并且配置环境变量</p>
+<ul>
+<li>访问<a href="&quot;http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html&quot;">Java官网</a>进行下载<img src="/2018/07/11/AutoWeka-Tutorial/java1.png" title="java下载页面"></li>
+<li>运行下载的安装程序，选择目录进行安装，假设安装到了C:\Program Files\Java\</li>
+<li>配置环境变量，设置JAVA_HOME=C:\Program Files\Java\jdk1.8.0_161<br>在PATH中添加该环境变量<img src="/2018/07/11/AutoWeka-Tutorial/java2.png" title="java环境变量配置1">
+<img src="/2018/07/11/AutoWeka-Tutorial/java3.png" title="java环境变量配置2">
+2.安装Weka</li>
+<li>访问<a href="&quot;https://www.cs.waikato.ac.nz/ml/weka/downloading.html&quot;">Weka官网</a>进行下载，这里我们选择<br>3.8稳定版。<img src="/2018/07/11/AutoWeka-Tutorial/weka1.png" title="weka下载"></li>
+</ul>
+
       
     </div>
     
@@ -328,6 +334,13 @@
     
 	
 	<div>
+	 
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
 	 
 	</div>
 	
@@ -343,148 +356,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Hadoop-with-Kerberos/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhyang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://pic4.zhimg.com/80/v2-2b286d694418e79588f2c7bd8cfa07e7_hd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HaiYang Ma's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/04/Hadoop-with-Kerberos/" itemprop="url">Apache Hadoop整合Kerberos</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T17:04:35+08:00">
-                2018-07-04
-              </time>
+              <a href="/2018/07/04/Hadoop-with-Kerberos/" rel="next" title="Apache Hadoop整合Kerberos">
+                <i class="fa fa-chevron-left"></i> Apache Hadoop整合Kerberos
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          
-Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
-说明环境服务器环境Centos7(6下也兼容）
-服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8
-开始配置Kerberos设置概述常
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/04/Hadoop-with-Kerberos/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-	
-	<div>
-	 
-	</div>
-	
-	
-    
-
-    
-
-    
-	
-	
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -494,10 +387,11 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
   </article>
 
 
-    
-  </section>
 
-  
+    <div class="post-spread">
+      
+    </div>
+  </div>
 
 
           </div>
@@ -505,6 +399,10 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
 
 
           
+
+  
+
+
 
         </div>
         
@@ -525,8 +423,17 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -581,6 +488,22 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#AutoWeka-使用教程"><span class="nav-number">1.</span> <span class="nav-text">AutoWeka 使用教程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#AutoWeka前置环境"><span class="nav-number">1.2.</span> <span class="nav-text">AutoWeka前置环境</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#使用图形界面的前置环境"><span class="nav-number">1.2.1.</span> <span class="nav-text">使用图形界面的前置环境</span></a></li></ol></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -728,6 +651,10 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
