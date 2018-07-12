@@ -92,6 +92,10 @@
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/weka1.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/weka2.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/weka3.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/iautoweka1.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/iautoweka2.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/iautoweka3.png">
+<meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/iautoweka4.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/iautoweka5.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/uautoweka1.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/uautoweka2.png">
@@ -103,7 +107,7 @@
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/uautoweka8.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/ucautoweka1.png">
 <meta property="og:image" content="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/ucautoweka2.png">
-<meta property="og:updated_time" content="2018-07-11T09:02:53.459Z">
+<meta property="og:updated_time" content="2018-07-12T01:13:07.030Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="AutoWeka Tutorial">
 <meta name="twitter:description" content="AutoWeka 使用教程概述 在WEKA中有许多即选即用的机器学习算法，然而，这些算法及它们各自的参数都会显著地影响最后的结果，各种不同算法与参数的组合数量也多到让人难以选择的地步。Auto-WEKA则是同时选择学习算法和它们参数，让使用者不必一再尝试。Auto-WEKA借用贝氏最佳化（Bayesian optimization）的创新做法，实现了完全自动化的方案。我们希望Auto-WEKA可以">
@@ -331,30 +335,40 @@
 <p>在WEKA中有许多即选即用的机器学习算法，然而，这些算法及它们各自的参数都会显著地影响最后的结果，<br>各种不同算法与参数的组合数量也多到让人难以选择的地步。Auto-WEKA则是同时选择学习算法和它们参数，<br>让使用者不必一再尝试。Auto-WEKA借用贝氏最佳化（Bayesian optimization）的创新做法，<br>实现了完全自动化的方案。<br>我们希望Auto-WEKA可以帮助非专业使用者更有效率地找到适合他们数据的机器学习算法和其参数，<br>并且最终提升机器学习的效果。 —AutoWeka官网</p>
 </blockquote>
 <h2 id="AutoWeka前置环境"><a href="#AutoWeka前置环境" class="headerlink" title="AutoWeka前置环境"></a>AutoWeka前置环境</h2><h3 id="使用图形界面的前置环境"><a href="#使用图形界面的前置环境" class="headerlink" title="使用图形界面的前置环境"></a>使用图形界面的前置环境</h3><h4 id="安装Java并且配置环境变量"><a href="#安装Java并且配置环境变量" class="headerlink" title="安装Java并且配置环境变量"></a>安装Java并且配置环境变量</h4><ul>
-<li>访问<a href="&quot;http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html&quot;">Java官网</a>进行下载<img src="/2018/07/11/AutoWeka-Tutorial/java1.png" title="java下载页面"></li>
+<li>访问<a href="&quot;http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html&quot;">Java官网</a>进行下载</li>
+</ul>
+<img src="/2018/07/11/AutoWeka-Tutorial/java1.png" title="java下载页面">
+<ul>
 <li>运行下载的安装程序，选择目录进行安装，假设安装到了C:\Program Files\Java\</li>
 <li>配置环境变量，设置<code>JAVA_HOME=C:\Program Files\Java\jdk1.8.0_161</code></li>
-<li>在PATH中添加该环境变量<code>%JAVA_HOME%\bin</code><img src="/2018/07/11/AutoWeka-Tutorial/java2.png" title="java环境变量配置1">
-<img src="/2018/07/11/AutoWeka-Tutorial/java3.png" title="java环境变量配置2">
-</li>
+<li>在PATH中添加该环境变量<code>%JAVA_HOME%\bin</code></li>
 </ul>
+<img src="/2018/07/11/AutoWeka-Tutorial/java2.png" title="java环境变量配置1">
+<img src="/2018/07/11/AutoWeka-Tutorial/java3.png" title="java环境变量配置2">
 <h4 id="安装Weka"><a href="#安装Weka" class="headerlink" title="安装Weka"></a>安装Weka</h4><ul>
-<li>访问<a href="&quot;https://www.cs.waikato.ac.nz/ml/weka/downloading.html&quot;">Weka官网</a>进行下载，这里我们选择<br>3.8稳定版。<img src="/2018/07/11/AutoWeka-Tutorial/weka1.png" title="weka下载"></li>
-<li>运行下载的安装程序，选择目录进行安装，这里我们安装到D:\Weka-3-8<img src="/2018/07/11/AutoWeka-Tutorial/weka2.png" title="weka安装"></li>
-<li>设置环境变量CLASSPATH，新增D:\Weka-3-8\weka.jar<img src="/2018/07/11/AutoWeka-Tutorial/weka3.png" title="weka环境变量配置"></li>
+<li>访问<a href="&quot;https://www.cs.waikato.ac.nz/ml/weka/downloading.html&quot;">Weka官网</a>进行下载，这里我们选择<br> 3.8稳定版。 <img src="/2018/07/11/AutoWeka-Tutorial/weka1.png" title="weka下载"></li>
+<li>运行下载的安装程序，选择目录进行安装，这里我们安装到D:\Weka-3-8 <img src="/2018/07/11/AutoWeka-Tutorial/weka2.png" title="weka安装"></li>
+<li>设置环境变量CLASSPATH，新增D:\Weka-3-8\weka.jar <img src="/2018/07/11/AutoWeka-Tutorial/weka3.png" title="weka环境变量配置"></li>
 <li>进入安装目录，双击Weka 3.8启动</li>
 </ul>
-<h4 id="安装AutoWeka"><a href="#安装AutoWeka" class="headerlink" title="安装AutoWeka"></a>安装AutoWeka</h4><pre><code>安装AutoWeka有两种方式，分别是通过Weka自带的包管理器在线安装（推荐）以及下载AutoWeka独立版进行安装。接下来我们
-将分别介绍。
-</code></pre><h5 id="在线安装"><a href="#在线安装" class="headerlink" title="在线安装"></a>在线安装</h5><pre><code>* 启动Weka，点击Weka工具栏上Tools中的Package Manager
-{% asset_img iautoweka1.png autoweka在线安装 %}
-* 选中AutoWeka进行安装，安装成功后重启Weka。
-{% asset_img iautoweka2.png autoweka在线安装 %}
-</code></pre><h5 id="离线安装"><a href="#离线安装" class="headerlink" title="离线安装"></a>离线安装</h5><pre><code>* 进入[AutoWeka官网](&quot;http://www.cs.ubc.ca/labs/beta/Projects/autoweka/&quot;)，下载最新版本2.6。
-{% asset_img iautoweka3.png autoweka离线安装 %}
-* 进入Package Manager点击右上角的File/URL,选中下载的zip即可进行安装，安装完毕后重启weka。
-{% asset_img iautoweka4.png autoweka离线安装 %}
-</code></pre><h3 id="使用命令行的前置环境"><a href="#使用命令行的前置环境" class="headerlink" title="使用命令行的前置环境"></a>使用命令行的前置环境</h3><h4 id="安装Java"><a href="#安装Java" class="headerlink" title="安装Java"></a>安装Java</h4><pre><code>**方法同上**
+<h4 id="安装AutoWeka"><a href="#安装AutoWeka" class="headerlink" title="安装AutoWeka"></a>安装AutoWeka</h4><p>安装AutoWeka有两种方式，分别是通过Weka自带的包管理器在线安装（推荐）以及下载AutoWeka独立版进行安装。接下来我们将分别介绍。</p>
+<h5 id="在线安装"><a href="#在线安装" class="headerlink" title="在线安装"></a>在线安装</h5><ul>
+<li>启动Weka，点击Weka工具栏上Tools中的Package Manager</li>
+</ul>
+<img src="/2018/07/11/AutoWeka-Tutorial/iautoweka1.png" title="autoweka在线安装">
+<ul>
+<li>选中AutoWeka进行安装，安装成功后重启Weka。</li>
+</ul>
+<img src="/2018/07/11/AutoWeka-Tutorial/iautoweka2.png" title="autoweka在线安装">
+<h5 id="离线安装"><a href="#离线安装" class="headerlink" title="离线安装"></a>离线安装</h5><ul>
+<li>进入<a href="&quot;http://www.cs.ubc.ca/labs/beta/Projects/autoweka/&quot;">AutoWeka官网</a>，下载最新版本2.6。</li>
+</ul>
+<img src="/2018/07/11/AutoWeka-Tutorial/iautoweka3.png" title="autoweka离线安装">
+<ul>
+<li>进入Package Manager点击右上角的File/URL,选中下载的zip即可进行安装，安装完毕后重启weka。</li>
+</ul>
+<img src="/2018/07/11/AutoWeka-Tutorial/iautoweka4.png" title="autoweka离线安装">
+<h3 id="使用命令行的前置环境"><a href="#使用命令行的前置环境" class="headerlink" title="使用命令行的前置环境"></a>使用命令行的前置环境</h3><h4 id="安装Java"><a href="#安装Java" class="headerlink" title="安装Java"></a>安装Java</h4><pre><code>**方法同上**
 </code></pre><h4 id="下载AutoWeka独立版（即上文的离线安装包）"><a href="#下载AutoWeka独立版（即上文的离线安装包）" class="headerlink" title="下载AutoWeka独立版（即上文的离线安装包）"></a>下载AutoWeka独立版（即上文的离线安装包）</h4><pre><code>* 将压缩文件解压至指定位置
 </code></pre><img src="/2018/07/11/AutoWeka-Tutorial/iautoweka5.png" title="autoweka解压">
 <h2 id="使用AutoWeka"><a href="#使用AutoWeka" class="headerlink" title="使用AutoWeka"></a>使用AutoWeka</h2><blockquote>
