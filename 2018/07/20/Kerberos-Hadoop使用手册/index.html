@@ -79,13 +79,17 @@
 
 
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="HaiYang Ma&#39;s Blog">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta name="description" content="概述本篇文章是基于上篇文章Kerberos与Hadoop集群成功配置之后的使用手册，所需环境以及前置条件已经在上文中详细讲述，不在本篇讨论之列。使用者要和实行了kerberos的集群进行通信。要kerberos的管理员创建对应的账户。并且生成keytab返回给使用者，使用者通过kinit命令认证后，就跟平常使用Hadoop的方式一致地使用即可。接下来会详细讲述。 在shell中使用Kerberos">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kerberos Hadoop使用手册">
+<meta property="og:url" content="http://yoursite.com/2018/07/20/Kerberos-Hadoop使用手册/index.html">
 <meta property="og:site_name" content="HaiYang Ma&#39;s Blog">
+<meta property="og:description" content="概述本篇文章是基于上篇文章Kerberos与Hadoop集群成功配置之后的使用手册，所需环境以及前置条件已经在上文中详细讲述，不在本篇讨论之列。使用者要和实行了kerberos的集群进行通信。要kerberos的管理员创建对应的账户。并且生成keytab返回给使用者，使用者通过kinit命令认证后，就跟平常使用Hadoop的方式一致地使用即可。接下来会详细讲述。 在shell中使用Kerberos">
 <meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2018-07-20T08:19:09.797Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="HaiYang Ma&#39;s Blog">
+<meta name="twitter:title" content="Kerberos Hadoop使用手册">
+<meta name="twitter:description" content="概述本篇文章是基于上篇文章Kerberos与Hadoop集群成功配置之后的使用手册，所需环境以及前置条件已经在上文中详细讲述，不在本篇讨论之列。使用者要和实行了kerberos的集群进行通信。要kerberos的管理员创建对应的账户。并且生成keytab返回给使用者，使用者通过kinit命令认证后，就跟平常使用Hadoop的方式一致地使用即可。接下来会详细讲述。 在shell中使用Kerberos">
 
 
 
@@ -115,13 +119,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/20/Kerberos-Hadoop使用手册/"/>
 
 
 
 
 
-  <title>HaiYang Ma's Blog</title>
+  <title>Kerberos Hadoop使用手册 | HaiYang Ma's Blog</title>
   
 
 
@@ -140,8 +144,7 @@
     
   
 
-  <div class="container sidebar-position-left 
-  page-home">
+  <div class="container sidebar-position-left page-post-detail">
     <div class="headband"></div>
 
     <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
@@ -224,9 +227,9 @@
         <div class="content-wrap">
           <div id="content" class="content">
             
-  <section id="posts" class="posts-expand">
+
+  <div id="posts" class="posts-expand">
     
-      
 
   
 
@@ -256,9 +259,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/20/Kerberos-Hadoop使用手册/" itemprop="url">Kerberos Hadoop使用手册</a></h1>
+          <h1 class="post-title" itemprop="name headline">Kerberos Hadoop使用手册</h1>
         
 
         <div class="post-meta">
@@ -308,18 +309,19 @@
       
 
       
-        
-          
-          概述本篇文章是基于上篇文章Kerberos与Hadoop集群成功配置之后的使用手册，所需环境以及前置条件已经在上文中详细讲述，不在本篇讨论之列。使用者要和实行了kerberos的集群进行通信。要kerberos的管理员创建对应的账户。并且生成keytab返回给使用者，使用者通过kinit命令认证后，
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/20/Kerberos-Hadoop使用手册/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p>本篇文章是基于上篇文章Kerberos与Hadoop集群成功配置之后的使用手册，所需环境以及前置条件已经在上文中详细讲述，不在本篇讨论之列。<br>使用者要和实行了kerberos的集群进行通信。要kerberos的管理员创建对应的账户。并且生成keytab返回给使用者，使用者通过kinit命令认证后，就跟平常使用Hadoop的方式一致地使用即可。接下来会详细讲述。</p>
+<h2 id="在shell中使用Kerberos安全认证"><a href="#在shell中使用Kerberos安全认证" class="headerlink" title="在shell中使用Kerberos安全认证"></a>在shell中使用Kerberos安全认证</h2><ol>
+<li>首先我们需要在Kerberos认证服务器（KDC）中生成节点所需要的密钥。首先要将节点的<br>对应信息加入到Kerberos认证服务器的数据库当中。<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">	kadmin.local #在KDC服务器上进入Kerberos命令行</span><br><span class="line">	进入之后</span><br><span class="line">kadmin.local: addprinc -randkey hadoop(你的用户名)/slave1(节点名称)</span><br><span class="line">kadmin.local: addprinc -randkey HTTP/slave1(节点名称)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>2.生成定义的的keytab密钥文件<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kadmin.local: xst -k /xxx(你设定的目录)/slave1.keytab hadoop/slave1 HTTP/slave1</span><br></pre></td></tr></table></figure></p>
+<p>3.使用keytab密钥文件<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">kinit -kt /xxx(你设定的目录)/slave1.keytab hadoop/slave1</span><br></pre></td></tr></table></figure></p>
+<p>认证完成后，可以使用<code>klist</code>命令查看认证状态。</p>
+<p>认证失败：<code>klist: No credentials cache found (ticket cache FILE:/tmp/krb5cc_0)</code><br>认证成功:<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">Default principal: zjh/master@HADOOP.COM</span><br><span class="line"></span><br><span class="line">Valid starting     Expires            Service principal</span><br><span class="line">07/20/18 16:02:54  07/21/18 16:02:54  krbtgt/HADOOP.COM@HADOOP.COM</span><br><span class="line">	renew until 07/27/18 16:02:54</span><br></pre></td></tr></table></figure></p>
+<p>4.对Hadoop进行操作<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hdfs dfs -ls /</span><br></pre></td></tr></table></figure></p>
+<p>结果<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Found 2 items</span><br><span class="line">drwx------   - zjh supergroup          0 2018-07-18 16:11 /hbase</span><br><span class="line">drwxr-xr-x   - zjh supergroup          0 2018-07-12 16:28 /test</span><br></pre></td></tr></table></figure></p>
+<p>如果没有认证或者没有被KDC服务器授权则会提示：<br><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">WARN ipc.Client: Exception encountered while connecting to the server : javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]</span><br><span class="line">ls: Failed on local exception: java.io.IOException: javax.security.sasl.SaslException: GSS initiate failed [Caused by GSSException: No valid credentials provided (Mechanism level: Failed to find any Kerberos tgt)]; Host Details : local host is: "master/192.168.0.33"; destination host is: "master":9000;</span><br></pre></td></tr></table></figure></p>
+
       
     </div>
     
@@ -327,6 +329,13 @@
     
 	
 	<div>
+	 
+		<div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+
 	 
 	</div>
 	
@@ -342,145 +351,28 @@
       
 
       
-
-      
-
       
       
-        <div class="post-eof"></div>
+
       
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/11/AutoWeka-Tutorial/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhyang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://pic4.zhimg.com/80/v2-2b286d694418e79588f2c7bd8cfa07e7_hd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HaiYang Ma's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/11/AutoWeka-Tutorial/" itemprop="url">AutoWeka Tutorial</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
             
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-11T15:47:47+08:00">
-                2018-07-11
-              </time>
+              <a href="/2018/07/11/AutoWeka-Tutorial/" rel="next" title="AutoWeka Tutorial">
+                <i class="fa fa-chevron-left"></i> AutoWeka Tutorial
+              </a>
             
+          </div>
 
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
             
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
+          </div>
         </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
       
 
       
-        
-          
-          AutoWeka 使用教程概述
-在WEKA中有许多即选即用的机器学习算法，然而，这些算法及它们各自的参数都会显著地影响最后的结果，各种不同算法与参数的组合数量也多到让人难以选择的地步。Auto-WEKA则是同时选择学习算法和它们参数，让使用者不必一再尝试。Auto-WEKA借用贝氏最佳化（Bayes
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/11/AutoWeka-Tutorial/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-	
-	<div>
-	 
-	</div>
-	
-	
-    
-
-    
-
-    
-	
-	
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
       
     </footer>
   </div>
@@ -490,146 +382,11 @@
   </article>
 
 
-    
-      
 
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/Hadoop-with-Kerberos/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="mhyang">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="https://pic4.zhimg.com/80/v2-2b286d694418e79588f2c7bd8cfa07e7_hd.jpg">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="HaiYang Ma's Blog">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/07/04/Hadoop-with-Kerberos/" itemprop="url">Apache Hadoop整合Kerberos</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T17:04:35+08:00">
-                2018-07-04
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          
-Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
-说明环境服务器环境Centos7(6下也兼容）
-服务器如下：hadoop001 主节点hadoop002 从节点hadoop版本2.6.5jdk版本1.8
-开始配置Kerberos设置概述常
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/07/04/Hadoop-with-Kerberos/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
+    <div class="post-spread">
       
     </div>
-    
-    
-    
-	
-	<div>
-	 
-	</div>
-	
-	
-    
-
-    
-
-    
-	
-	
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
   </div>
-  
-  
-  
-  </article>
-
-
-    
-  </section>
-
-  
 
 
           </div>
@@ -637,6 +394,10 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
 
 
           
+
+  
+
+
 
         </div>
         
@@ -657,8 +418,17 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -713,6 +483,22 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#在shell中使用Kerberos安全认证"><span class="nav-number">2.</span> <span class="nav-text">在shell中使用Kerberos安全认证</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
@@ -860,6 +646,10 @@ Apache Hadoop整合KerberosApache原版Hadoop集群整合Kerberos安全验证
 
 
   
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
 
   
 
